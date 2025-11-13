@@ -8,19 +8,10 @@ Este projeto é um Kanban simples fullstack, com backend em Go e frontend em Rea
 
 ---
 
-## Demonstração
-
-![User Flow](docs/user-flow.png)
-
----
-
 ## Como rodar o projeto
 
-### Pré-requisitos
-- Docker e Docker Compose instalados
-- (Opcional) Go e Node.js instalados para rodar localmente sem Docker
+### 1. Usando Docker Compose (recomendado)
 
-### Passos rápidos (recomendado)
 1. Clone o repositório:
    ```sh
    git clone https://github.com/seu-usuario/desafio-fullstack-veritas.git
@@ -34,18 +25,73 @@ Este projeto é um Kanban simples fullstack, com backend em Go e frontend em Rea
    - Frontend: http://localhost:3000
    - Backend: http://localhost:8080
 
-### Rodar localmente (sem Docker)
-- Backend:
-  ```sh
-  cd backend
-  go run .
-  ```
-- Frontend:
-  ```sh
-  cd frontend
-  npm install
-  npm start
-  ```
+### 2. Rodando localmente (sem Docker)
+
+#### Backend
+1. Instale o Go (versão 1.22 ou superior).
+2. No terminal:
+   ```sh
+   cd backend
+   go run .
+   ```
+3. O backend estará disponível em http://localhost:8080
+
+#### Frontend
+1. Instale o Node.js (versão 20 ou superior) e npm.
+2. No terminal:
+   ```sh
+   cd frontend
+   npm install
+   npm start
+   ```
+3. O frontend estará disponível em http://localhost:3000
+
+---
+
+## Decisões técnicas
+- **Go**: Escolhido pelo desempenho, simplicidade e fácil manipulação de arquivos para persistência local.
+- **React**: Permite uma UI moderna, componentizada e fácil de evoluir.
+- **Persistência em JSON**: Ideal para MVPs, facilita testes e não exige banco de dados.
+- **Docker**: Garante que o projeto rode igual em qualquer ambiente, facilitando testes e deploy.
+
+---
+
+## Limitações conhecidas
+- Não possui autenticação de usuários.
+- Não faz deploy automático em nuvem.
+- Persistência apenas local (arquivo `tasks.json`).
+- Não há testes end-to-end (E2E).
+
+---
+
+## Melhorias futuras
+- Adicionar autenticação e autorização de usuários.
+- Deploy em nuvem (Heroku, AWS, etc).
+- Testes E2E (Cypress, Playwright).
+- Melhor responsividade e acessibilidade.
+- Filtros, busca e ordenação de tarefas.
+- Integração com banco de dados relacional.
+
+---
+
+## User Flow (Fluxo do Usuário)
+Veja o arquivo `docs/user-flow.png` para um diagrama visual.
+
+**Resumo do fluxo:**
+1. Usuário acessa o sistema.
+2. Visualiza as três colunas do Kanban.
+3. Adiciona uma nova tarefa.
+4. Move tarefas entre colunas (drag and drop ou botões).
+5. Edita ou exclui tarefas.
+6. Todas as ações são salvas e refletidas na interface.
+
+---
+
+## Testes
+- **Backend:**
+  - Execute `go test` na pasta backend (cobre casos de sucesso e erro)
+- **Frontend:**
+  - Execute `npm test` na pasta frontend (exemplo em `TaskForm.test.js`)
 
 ---
 
@@ -58,71 +104,4 @@ Este projeto é um Kanban simples fullstack, com backend em Go e frontend em Rea
 
 ---
 
-## Funcionalidades
-- Visualização de três colunas fixas: A Fazer, Em Progresso e Concluídas
-- Adição de tarefas com título obrigatório e descrição opcional
-- Edição, exclusão e movimentação de tarefas entre colunas (drag and drop ou botões)
-- Feedback visual de loading e erro
-- Persistência dos dados em arquivo JSON
-- API RESTful completa (GET, POST, PUT, DELETE)
-- Testes automatizados no backend e frontend
-- Docker e Docker Compose para facilitar execução
-
----
-
-## Decisões técnicas
-- **Go**: Simplicidade, performance e fácil manipulação de arquivos.
-- **React**: Componentização e experiência moderna.
-- **Persistência em JSON**: Fácil para MVP e testes locais.
-- **Docker**: Facilita rodar em qualquer ambiente.
-
----
-
-## Limitações conhecidas
-- Sem autenticação de usuários.
-- Sem deploy em nuvem.
-- Persistência apenas local (arquivo JSON).
-- Não há testes E2E.
-
----
-
-## Melhorias futuras
-- Autenticação e autorização.
-- Deploy em nuvem (ex: Heroku, AWS).
-- Testes E2E (Cypress, Playwright).
-- Responsividade avançada.
-- Filtros e busca de tarefas.
-
----
-
-## User Flow (Fluxo do Usuário)
-Veja o arquivo `docs/user-flow.png`.
-
-**Exemplo de fluxo:**
-1. Usuário acessa o sistema.
-2. Visualiza as três colunas do Kanban.
-3. Adiciona uma nova tarefa.
-4. Move tarefas entre colunas (drag and drop ou botões).
-5. Edita ou exclui tarefas.
-6. Todas as ações são salvas e refletidas na interface.
-
----
-
-## Data Flow (opcional)
-Veja o arquivo `docs/data-flow.png`.
-
-- Frontend faz requisições REST para o backend.
-- Backend manipula dados em memória e salva no arquivo `tasks.json`.
-
----
-
-## Testes
-- **Backend:**
-  - Execute `go test` na pasta backend (cobre casos de sucesso e erro)
-- **Frontend:**
-  - Execute `npm test` na pasta frontend (exemplo em `TaskForm.test.js`)
-
----
-
-## Contato
-Dúvidas ou sugestões? Entre em contato pelo GitHub ou e-mail.
+**Dúvidas? Entre em contato!**
