@@ -1,0 +1,74 @@
+<svg width="1120" height="720" viewBox="0 0 1120 720" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">User Flow do Mini Kanban de Tarefas</title>
+  <desc id="desc">Fluxo de uso mostrando acesso ao Kanban, carregamento de tarefas, acoes de CRUD, API Go, persistencia JSON e feedback visual.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2L10 6L2 10V2Z" fill="#334155"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="1120" height="720" fill="#F5F7FA"/>
+  <rect x="36" y="36" width="1048" height="648" rx="18" fill="#FFFFFF" stroke="#D8DEE8"/>
+
+  <text x="74" y="92" fill="#111827" font-family="Arial, sans-serif" font-size="30" font-weight="700">Mini Kanban de Tarefas - User Flow</text>
+  <text x="74" y="124" fill="#64748B" font-family="Arial, sans-serif" font-size="16">Fluxo principal entre usuario, frontend React, API Go e persistencia JSON.</text>
+
+  <rect x="76" y="176" width="190" height="94" rx="10" fill="#EFF6FF" stroke="#93C5FD" filter="url(#shadow)"/>
+  <text x="171" y="212" text-anchor="middle" fill="#1E3A8A" font-family="Arial, sans-serif" font-size="17" font-weight="700">1. Acessa o app</text>
+  <text x="171" y="239" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">Abre o Kanban</text>
+
+  <rect x="334" y="176" width="208" height="94" rx="10" fill="#F8FAFC" stroke="#CBD5E1" filter="url(#shadow)"/>
+  <text x="438" y="212" text-anchor="middle" fill="#111827" font-family="Arial, sans-serif" font-size="17" font-weight="700">2. Carrega tarefas</text>
+  <text x="438" y="239" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">GET /tasks</text>
+
+  <rect x="620" y="176" width="220" height="94" rx="10" fill="#ECFDF5" stroke="#86EFAC" filter="url(#shadow)"/>
+  <text x="730" y="212" text-anchor="middle" fill="#065F46" font-family="Arial, sans-serif" font-size="17" font-weight="700">3. Exibe o quadro</text>
+  <text x="730" y="239" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">A Fazer, Em Progresso, Concluidas</text>
+
+  <path d="M268 223H324" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M544 223H610" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="116" y="380" width="188" height="92" rx="10" fill="#FFF7ED" stroke="#FDBA74" filter="url(#shadow)"/>
+  <text x="210" y="415" text-anchor="middle" fill="#9A3412" font-family="Arial, sans-serif" font-size="16" font-weight="700">Criar tarefa</text>
+  <text x="210" y="441" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">POST /tasks</text>
+
+  <rect x="356" y="380" width="188" height="92" rx="10" fill="#FDF2F8" stroke="#F9A8D4" filter="url(#shadow)"/>
+  <text x="450" y="415" text-anchor="middle" fill="#9D174D" font-family="Arial, sans-serif" font-size="16" font-weight="700">Editar tarefa</text>
+  <text x="450" y="441" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">PUT /tasks/{id}</text>
+
+  <rect x="596" y="380" width="188" height="92" rx="10" fill="#FEFCE8" stroke="#FDE047" filter="url(#shadow)"/>
+  <text x="690" y="415" text-anchor="middle" fill="#854D0E" font-family="Arial, sans-serif" font-size="16" font-weight="700">Mover tarefa</text>
+  <text x="690" y="441" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">PUT com novo status</text>
+
+  <rect x="836" y="380" width="188" height="92" rx="10" fill="#FEF2F2" stroke="#FCA5A5" filter="url(#shadow)"/>
+  <text x="930" y="415" text-anchor="middle" fill="#991B1B" font-family="Arial, sans-serif" font-size="16" font-weight="700">Excluir tarefa</text>
+  <text x="930" y="441" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">DELETE /tasks/{id}</text>
+
+  <path d="M730 272V324C730 340 718 348 700 348H210C196 348 190 357 190 371" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M730 272V324C730 340 718 348 700 348H450C436 348 430 357 430 371" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M730 272V371" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M730 272V324C730 340 742 348 760 348H930C944 348 950 357 950 371" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="318" y="560" width="220" height="92" rx="10" fill="#F8FAFC" stroke="#CBD5E1" filter="url(#shadow)"/>
+  <text x="428" y="595" text-anchor="middle" fill="#111827" font-family="Arial, sans-serif" font-size="17" font-weight="700">4. API Go valida</text>
+  <text x="428" y="621" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">Campos, status e ID</text>
+
+  <rect x="610" y="560" width="212" height="92" rx="10" fill="#F0FDFA" stroke="#5EEAD4" filter="url(#shadow)"/>
+  <text x="716" y="595" text-anchor="middle" fill="#115E59" font-family="Arial, sans-serif" font-size="17" font-weight="700">5. Atualiza JSON</text>
+  <text x="716" y="621" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">backend/data/tasks.json</text>
+
+  <rect x="874" y="560" width="150" height="92" rx="10" fill="#EEF2FF" stroke="#A5B4FC" filter="url(#shadow)"/>
+  <text x="949" y="595" text-anchor="middle" fill="#3730A3" font-family="Arial, sans-serif" font-size="17" font-weight="700">6. Feedback</text>
+  <text x="949" y="621" text-anchor="middle" fill="#334155" font-family="Arial, sans-serif" font-size="14">Tela atualizada</text>
+
+  <path d="M210 474V512C210 530 224 540 246 540H428V550" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M450 474V550" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M690 474V512C690 530 674 540 652 540H428V550" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M930 474V512C930 530 914 540 892 540H428V550" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M540 606H600" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M824 606H864" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M949 558V154C949 140 938 132 920 132H732C710 132 700 142 700 164" stroke="#334155" stroke-width="2.5" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+</svg>
