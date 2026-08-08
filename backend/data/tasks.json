@@ -1,0 +1,26 @@
+[
+  {
+    "id": "seed-1",
+    "title": "Organizar estrutura do desafio",
+    "description": "Separar frontend, backend e docs para facilitar a avaliacao.",
+    "status": "todo",
+    "createdAt": "2026-08-07T12:00:00Z",
+    "updatedAt": "2026-08-07T12:00:00Z"
+  },
+  {
+    "id": "seed-2",
+    "title": "Implementar API REST",
+    "description": "Criar endpoints GET, POST, PUT e DELETE para tarefas.",
+    "status": "in_progress",
+    "createdAt": "2026-08-07T12:10:00Z",
+    "updatedAt": "2026-08-07T12:10:00Z"
+  },
+  {
+    "id": "seed-3",
+    "title": "Desenhar user flow",
+    "description": "Documentar o fluxo principal do usuario no kanban.",
+    "status": "done",
+    "createdAt": "2026-08-07T12:20:00Z",
+    "updatedAt": "2026-08-07T12:20:00Z"
+  }
+]
