@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 
@@ -23,9 +23,17 @@ export default function App() {
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [draggedId, setDraggedId] = useState(null);
+  const [pendingTaskIds, setPendingTaskIds] = useState(() => new Set());
+  const submitLockRef = useRef(false);
+  const feedbackTimerRef = useRef(null);
+  const pendingTaskIdsRef = useRef(new Set());
 
   useEffect(() => {
     loadTasks();
+
+    return () => {
+      window.clearTimeout(feedbackTimerRef.current);
+    };
   }, []);
 
   const counters = useMemo(() => {
@@ -73,8 +81,8 @@ export default function App() {
 
   function showFeedback(message, type = "success") {
     setFeedback({ message, type });
-    window.clearTimeout(showFeedback.timeout);
-    showFeedback.timeout = window.setTimeout(() => setFeedback(null), 3200);
+    window.clearTimeout(feedbackTimerRef.current);
+    feedbackTimerRef.current = window.setTimeout(() => setFeedback(null), 3200);
   }
 
   function openCreateModal(status = "todo") {
@@ -95,6 +103,10 @@ export default function App() {
 
   function closeModal() {
     if (saving) return;
+    resetModal();
+  }
+
+  function resetModal() {
     setIsModalOpen(false);
     setEditingTask(null);
     setForm(emptyForm);
@@ -102,12 +114,15 @@ export default function App() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (submitLockRef.current) return;
+
     if (!form.title.trim()) {
       showFeedback("Informe um titulo para a tarefa.", "error");
       return;
     }
 
     try {
+      submitLockRef.current = true;
       setSaving(true);
       const payload = {
         title: form.title.trim(),
@@ -131,19 +146,22 @@ export default function App() {
         showFeedback("Tarefa criada.");
       }
 
-      closeModal();
+      resetModal();
     } catch (error) {
       showFeedback(error.message, "error");
     } finally {
+      submitLockRef.current = false;
       setSaving(false);
     }
   }
 
   async function updateTaskStatus(task, nextStatus) {
     if (task.status === nextStatus) return;
+    if (pendingTaskIdsRef.current.has(task.id)) return;
 
     const previous = tasks;
     const optimistic = { ...task, status: nextStatus };
+    markTaskPending(task.id, true);
     setTasks((current) => current.map((item) => (item.id === task.id ? optimistic : item)));
 
     try {
@@ -160,14 +178,19 @@ export default function App() {
     } catch (error) {
       setTasks(previous);
       showFeedback(error.message, "error");
+    } finally {
+      markTaskPending(task.id, false);
     }
   }
 
   async function deleteTask(task) {
+    if (pendingTaskIdsRef.current.has(task.id)) return;
+
     const confirmed = window.confirm(`Excluir "${task.title}"?`);
     if (!confirmed) return;
 
     const previous = tasks;
+    markTaskPending(task.id, true);
     setTasks((current) => current.filter((item) => item.id !== task.id));
 
     try {
@@ -176,7 +199,21 @@ export default function App() {
     } catch (error) {
       setTasks(previous);
       showFeedback(error.message, "error");
+    } finally {
+      markTaskPending(task.id, false);
     }
+  }
+
+  function markTaskPending(id, isPending) {
+    const next = new Set(pendingTaskIdsRef.current);
+    if (isPending) {
+      next.add(id);
+    } else {
+      next.delete(id);
+    }
+
+    pendingTaskIdsRef.current = next;
+    setPendingTaskIds(next);
   }
 
   function moveByStep(task, direction) {
@@ -257,55 +294,17 @@ export default function App() {
                     <div className="empty-column">Sem tarefas</div>
                   ) : (
                     columnTasks.map((task) => (
-                      <div
-                        className="task-card"
+                      <TaskCard
                         key={task.id}
-                        draggable
+                        task={task}
+                        isPending={pendingTaskIds.has(task.id)}
                         onDragStart={() => setDraggedId(task.id)}
                         onDragEnd={() => setDraggedId(null)}
-                      >
-                        <div className="task-content">
-                          <h3>{task.title}</h3>
-                          {task.description && <p>{task.description}</p>}
-                        </div>
-
-                        <div className="task-actions" aria-label={`Acoes para ${task.title}`}>
-                          <button
-                            className="icon-button"
-                            title="Mover para coluna anterior"
-                            aria-label="Mover para coluna anterior"
-                            disabled={task.status === "todo"}
-                            onClick={() => moveByStep(task, -1)}
-                          >
-                            &lt;
-                          </button>
-                          <button
-                            className="icon-button"
-                            title="Editar"
-                            aria-label="Editar"
-                            onClick={() => openEditModal(task)}
-                          >
-                            E
-                          </button>
-                          <button
-                            className="icon-button danger"
-                            title="Excluir"
-                            aria-label="Excluir"
-                            onClick={() => deleteTask(task)}
-                          >
-                            x
-                          </button>
-                          <button
-                            className="icon-button"
-                            title="Mover para proxima coluna"
-                            aria-label="Mover para proxima coluna"
-                            disabled={task.status === "done"}
-                            onClick={() => moveByStep(task, 1)}
-                          >
-                            &gt;
-                          </button>
-                        </div>
-                      </div>
+                        onMoveBackward={() => moveByStep(task, -1)}
+                        onEdit={() => openEditModal(task)}
+                        onDelete={() => deleteTask(task)}
+                        onMoveForward={() => moveByStep(task, 1)}
+                      />
                     ))
                   )}
                 </div>
@@ -333,6 +332,7 @@ export default function App() {
                 value={form.title}
                 onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
                 placeholder="Ex.: Revisar endpoints"
+                disabled={saving}
               />
             </label>
 
@@ -344,6 +344,7 @@ export default function App() {
                 onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
                 placeholder="Detalhe rapido da tarefa"
                 rows={4}
+                disabled={saving}
               />
             </label>
 
@@ -352,6 +353,7 @@ export default function App() {
               <select
                 value={form.status}
                 onChange={(event) => setForm((current) => ({ ...current, status: event.target.value }))}
+                disabled={saving}
               >
                 {columns.map((column) => (
                   <option key={column.id} value={column.id}>
@@ -362,10 +364,10 @@ export default function App() {
             </label>
 
             <footer className="modal-actions">
-              <button className="ghost-button" type="button" onClick={closeModal}>
+              <button className="ghost-button" type="button" onClick={closeModal} disabled={saving}>
                 Cancelar
               </button>
-              <button className="primary-button" type="submit" disabled={saving}>
+              <button className="primary-button" type="submit" disabled={saving || !form.title.trim()}>
                 {saving ? "Salvando..." : "Salvar"}
               </button>
             </footer>
@@ -373,5 +375,58 @@ export default function App() {
         </div>
       )}
     </main>
+  );
+}
+
+function TaskCard({
+  task,
+  isPending,
+  onDragStart,
+  onDragEnd,
+  onMoveBackward,
+  onEdit,
+  onDelete,
+  onMoveForward
+}) {
+  return (
+    <div
+      className={`task-card ${isPending ? "is-pending" : ""}`}
+      draggable={!isPending}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      aria-busy={isPending}
+    >
+      <div className="task-content">
+        <h3>{task.title}</h3>
+        {task.description && <p>{task.description}</p>}
+      </div>
+
+      <div className="task-actions" aria-label={`Acoes para ${task.title}`}>
+        <button
+          className="icon-button"
+          title="Mover para coluna anterior"
+          aria-label="Mover para coluna anterior"
+          disabled={isPending || task.status === "todo"}
+          onClick={onMoveBackward}
+        >
+          &lt;
+        </button>
+        <button className="icon-button" title="Editar" aria-label="Editar" disabled={isPending} onClick={onEdit}>
+          E
+        </button>
+        <button className="icon-button danger" title="Excluir" aria-label="Excluir" disabled={isPending} onClick={onDelete}>
+          x
+        </button>
+        <button
+          className="icon-button"
+          title="Mover para proxima coluna"
+          aria-label="Mover para proxima coluna"
+          disabled={isPending || task.status === "done"}
+          onClick={onMoveForward}
+        >
+          &gt;
+        </button>
+      </div>
+    </div>
   );
 }

@@ -261,6 +261,11 @@ h1 {
   cursor: grabbing;
 }
 
+.task-card.is-pending {
+  opacity: 0.72;
+  pointer-events: none;
+}
+
 .task-content {
   min-width: 0;
 }

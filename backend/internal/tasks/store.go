@@ -63,7 +63,6 @@ func (s *JSONStore) Create(payload TaskPayload) (Task, error) {
 
 	now := time.Now().UTC()
 	task := Task{
-		ID:          newID(),
 		Title:       title,
 		Description: description,
 		Status:      status,
@@ -74,6 +73,7 @@ func (s *JSONStore) Create(payload TaskPayload) (Task, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	task.ID = s.nextIDLocked()
 	s.tasks[task.ID] = task
 	if err := s.saveLocked(); err != nil {
 		delete(s.tasks, task.ID)
@@ -169,6 +169,15 @@ func (s *JSONStore) saveLocked() error {
 	}
 
 	return os.WriteFile(s.path, data, 0o644)
+}
+
+func (s *JSONStore) nextIDLocked() string {
+	for {
+		id := newID()
+		if _, exists := s.tasks[id]; !exists {
+			return id
+		}
+	}
 }
 
 func normalizePayload(payload TaskPayload, defaultStatus Status) (string, string, Status, error) {
